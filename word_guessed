@@ -1,0 +1,33 @@
+#!/bin/sh
+#
+#	word_guessed
+#	Helper function for hm
+#	Determines if word has been guessed
+#
+#   RETURNS: 0 if all letters are found; 1 if letters missing
+#
+#	USAGE: ./word_guessed $word $guesses
+
+word="bedroom"
+guesses="be"
+LETTER_MISSING=0
+#word_expl=`echo $word| sed 's/./& /g'`
+word_expl=`echo $1| sed 's/./& /g'`
+
+for l in $word_expl
+do
+	if echo $l | grep -q "[$2/]"
+	#if echo $l | grep -q "[$guesses]"
+	then
+		#echo "word letter $l is in guesses: $guesses"
+		LETTER_MISSING=0
+	else
+		#echo "word letter $l is NOT in guesses: $guesses"
+		LETTER_MISSING=1
+		break
+	fi
+done
+
+echo $LETTER_MISSING
+
+

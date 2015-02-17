@@ -1,0 +1,72 @@
+#!/bin/sh
+#
+# 	Hangman game
+#
+#	uses ./random_word; ./in_word; ./word_guessed 
+#	helper functions, as well as hm.0 through hm.7 files
+#
+#	Kate deBethune - csci e26 - November 30, 2014
+
+	guessed=""
+	guesses=7
+	image_counter=0
+	hm_img="hm."
+	already_guessed=0
+	word_found=1
+	word=`./random_word`
+	word_expl=`echo $word | sed 's/./& /g'`
+	while [ $guesses -gt 0 ]
+	do
+  		read char
+  		clear
+  		if [ -n "$char" ]
+  		then
+  			M=$(./in_word $guessed $char)
+  			N=$(./in_word $word $char)
+  			if [ $M -eq 0 ]
+  			then
+  				echo "You already guessed that letter"
+  				guesses=$((guesses -1))
+    		elif [ $N -eq 1 ]
+    		then
+    			guesses=$((guesses -1))
+  			fi
+  			guessed="$guessed$char"	
+  		fi
+  		image_counter=`expr 7 - $guesses`
+  		hm_img="$hm_img$image_counter"
+  		cat $hm_img
+  		hm_img="hm."
+  		echo "Guesses:" $guessed
+  		echo "Word:" 
+  		echo $word|sed "s/[^$guessed/]/_/g"
+  		echo "Guesses left:" $guesses
+  		
+  		if [ $guesses -eq 0 ]
+  		then
+  			clear
+  			echo "I was thinking of" $word
+  			echo "Play again? y/n"
+  			read char
+  			case $char in
+			y*|Y*) ./hm clear	;;
+			*)	exit 0	;;
+			esac
+  		else
+  			echo "Guess?"
+  		fi
+  		
+  		word_found=`./word_guessed $word $guessed`
+  		if [ $word_found -eq 0 ]
+  		then
+  			clear
+  			echo "You guessed the word: $word"
+  			echo "Play again? y/n"
+  			read char
+  			case $char in
+			y*|Y*) ./hm clear	;;
+			*)	exit 0	;;
+			esac
+		fi	
+	done
+	

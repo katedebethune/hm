@@ -1,0 +1,27 @@
+#!/bin/sh
+#
+#	in_word
+#	Helper function for hm
+#	Determines if current char has already been guessed
+#	or is in the current word.
+#   RETURNS: Y if found, N if not found
+#
+
+#word="bedroom"
+#in_word_expl=`echo $word | sed 's/./& /g'`
+in_word_expl=`echo $1 | sed 's/./& /g'`
+RETVAL=0
+for l in $in_word_expl
+do
+	if [[ $l = $2 ]]
+	then
+		echo "0"
+		exit $RETVAL
+	fi
+done
+echo "1"
+exit $RETVAL
+
+
+
+
